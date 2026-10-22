@@ -519,15 +519,22 @@ $folderBox.Margin = New-Object System.Windows.Forms.Padding(0, 7, 10, 7)
 $layout.Controls.Add($folderBox, 1, 1)
 $layout.SetColumnSpan($folderBox, 2)
 $browseButton = New-Object System.Windows.Forms.Button
-$browseButton.Text = 'Browse...'
+$browseButton.Text = 'Choose file...'
 $browseButton.Dock = 'Fill'
 $browseButton.Margin = New-Object System.Windows.Forms.Padding(0, 3, 0, 3)
 $layout.Controls.Add($browseButton, 3, 1)
+$browseTip = New-Object System.Windows.Forms.ToolTip
+$browseTip.SetToolTip($browseButton, 'Choose any Excel workbook. The app will search all Excel files in its folder.')
 $browseButton.Add_Click({
-    $dialog = New-Object System.Windows.Forms.FolderBrowserDialog
-    $dialog.Description = 'Select the folder containing the Excel files'
-    $dialog.SelectedPath = $folderBox.Text
-    if ($dialog.ShowDialog($form) -eq [System.Windows.Forms.DialogResult]::OK) { $folderBox.Text = $dialog.SelectedPath }
+    $dialog = New-Object System.Windows.Forms.OpenFileDialog
+    $dialog.Title = 'Choose any Excel workbook in the folder to search'
+$dialog.Filter = 'Excel workbooks (*.xls;*.xlsx;*.xlsm)|*.xls;*.xlsx;*.xlsm|All files (*.*)|*.*'
+    $dialog.CheckFileExists = $true
+    $dialog.Multiselect = $false
+    if (Test-Path -LiteralPath $folderBox.Text -PathType Container) { $dialog.InitialDirectory = [System.IO.Path]::GetFullPath($folderBox.Text) }
+    if ($dialog.ShowDialog($form) -eq [System.Windows.Forms.DialogResult]::OK) {
+        $folderBox.Text = [System.IO.Path]::GetDirectoryName($dialog.FileName)
+    }
     $dialog.Dispose()
 })
 
