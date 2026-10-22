@@ -6,10 +6,10 @@ if (-not (Test-Path -LiteralPath $compiler -PathType Leaf)) {
 }
 
 $distRoot = Join-Path $PSScriptRoot 'dist'
-$packageFolder = Join-Path $distRoot 'Client Excel Search'
+$manifest = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'version.json') -Raw | ConvertFrom-Json
+$packageFolder = Join-Path $distRoot "Client Excel Search $($manifest.version)"
 New-Item -ItemType Directory -Path $packageFolder -Force | Out-Null
 
-$manifest = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'version.json') -Raw | ConvertFrom-Json
 $exePath = Join-Path $packageFolder 'Client Excel Search.exe'
 $sourcePath = Join-Path $PSScriptRoot 'ClientExcelSearchLauncher.cs'
 $compilerArgs = @(
