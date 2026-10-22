@@ -2,11 +2,11 @@
 
 A Windows app for finding a client by name or COF NO in Excel workbooks. It shows the workbook, worksheet, and row, and can open the selected row in Excel.
 
-## Start the app
+## Run the client app
 
-Double-click `Start Client Search.cmd`. The launcher checks GitHub for a newer version before opening the app. When an update is available, choose **Yes** to install it. Updates are downloaded over HTTPS and checked against the SHA-256 hashes in `version.json`.
+Build the client package with `.Build-ClientSearchExe.ps1`, then extract the generated ZIP and double-click `Client Excel Search.exe`. Keep the EXE and its PowerShell support files together. The EXE launches the app and checks GitHub for updates; choose **Yes** to install an available update. Updated scripts are downloaded over HTTPS and checked against the SHA-256 hashes in `version.json`.
 
-Microsoft Excel must be installed. The app searches `.xls`, `.xlsx`, and `.xlsm` files in the selected folder and its subfolders.
+Microsoft Excel desktop must be installed. The client chooses the folder to search. The app searches `.xls`, `.xlsx`, and `.xlsm` files in that folder and its subfolders.
 
 ## Publish an update
 

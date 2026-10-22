@@ -1,6 +1,7 @@
 *.xls
 *.xlsx
 *.xlsm
+dist/
 ~$*
 sales 2024/
 

@@ -2,7 +2,7 @@ Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
-$defaultFolder = 'D:\FILES\Search Data\sales 2024\sales 2024'
+$defaultFolder = [Environment]::GetFolderPath([Environment+SpecialFolder]::MyDocuments)
 $script:SearchWhitespaceChars = [char[]]@(9, 10, 13, 160, 8199, 8239, 8203, 65279)
 $script:WorkerPath = Join-Path $PSScriptRoot 'ClientSearchWorker.ps1'
 $script:WorkerProcess = $null
