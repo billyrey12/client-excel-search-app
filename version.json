@@ -1,0 +1,13 @@
+{
+    "version":  "1.0.0",
+    "files":  [
+                  {
+                      "name":  "ClientSearchApp.ps1",
+                      "sha256":  "46abe497eddff9186385bf0cc4c1d6eda2a34e02ab0498359605013650be4ed6"
+                  },
+                  {
+                      "name":  "ClientSearchWorker.ps1",
+                      "sha256":  "bc2a00215d7fd69ac2f1af062d76ba34eff313200a8b8f008d396956326b61ee"
+                  }
+              ]
+}
