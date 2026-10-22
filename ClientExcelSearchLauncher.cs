@@ -1,20 +1,33 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 internal static class ClientExcelSearchLauncher
 {
+    private static readonly string[] PayloadFiles =
+    {
+        "ClientSearchApp.ps1",
+        "ClientSearchWorker.ps1",
+        "UpdateClientSearch.ps1",
+        "version.json"
+    };
+
     [STAThread]
     private static void Main()
     {
-        string appFolder = AppDomain.CurrentDomain.BaseDirectory;
+        string appFolder = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "ClientExcelSearch",
+            "App");
         string powerShell = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.Windows),
             @"System32\WindowsPowerShell\v1.0\powershell.exe");
 
         try
         {
+            ExtractMissingPayload(appFolder);
             RunScript(powerShell, appFolder, "UpdateClientSearch.ps1");
             RunScript(powerShell, appFolder, "ClientSearchApp.ps1");
         }
@@ -28,11 +41,33 @@ internal static class ClientExcelSearchLauncher
         }
     }
 
+    private static void ExtractMissingPayload(string appFolder)
+    {
+        Directory.CreateDirectory(appFolder);
+        Assembly assembly = Assembly.GetExecutingAssembly();
+
+        foreach (string fileName in PayloadFiles)
+        {
+            string filePath = Path.Combine(appFolder, fileName);
+            if (File.Exists(filePath))
+                continue;
+
+            string resourceName = "Payload." + fileName;
+            using (Stream resource = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (resource == null)
+                    throw new FileNotFoundException("Embedded app file is missing: " + fileName);
+                using (FileStream output = File.Create(filePath))
+                    resource.CopyTo(output);
+            }
+        }
+    }
+
     private static void RunScript(string powerShell, string appFolder, string fileName)
     {
         string scriptPath = Path.Combine(appFolder, fileName);
         if (!File.Exists(scriptPath))
-            throw new FileNotFoundException("Required file is missing: " + fileName, scriptPath);
+            throw new FileNotFoundException("Required app file is missing: " + fileName, scriptPath);
         if (!File.Exists(powerShell))
             throw new FileNotFoundException("Windows PowerShell 5.1 was not found.", powerShell);
 
